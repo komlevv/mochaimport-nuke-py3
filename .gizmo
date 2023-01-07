@@ -1,0 +1,111 @@
+#! /Applications/Nuke7.0v8/NukeX7.0v8.app/../Nuke7.0v8.app/Contents/MacOS/Nuke7.0v8 -nx
+version 7.0 v8
+Gizmo {
+ inputs 2
+ addUserKnob {20 User l "Stabilized View"}
+ addUserKnob {26 loadMochaDataLabel l "load mocha data" t "load Nuke Corner Pin (*.nk) data from mocha" T ""}
+ addUserKnob {22 loadCornerPinFile l "from File" t "load the corner pin data from a mocha Nuke corner pin (*.nk) file" -STARTLINE T "import mochaimport\nmochaimport.cornerPinNode.loadTrackingDataFromFile()"}
+ addUserKnob {22 pasteCornerPinDataFromClipboard l "from Clipboard" t "paste mocha's NUKE Corner Pin (*.nk) data from the clipboard" -STARTLINE T "import mochaimport\nmochaimport.cornerPinNode.loadTrackinDataFromClipboard()"}
+ addUserKnob {20 cornerpindata l data n 1}
+ addUserKnob {12 pin1 l "pin 1"}
+ addUserKnob {12 pin2 l "pin 2"}
+ addUserKnob {12 pin3 l "pin 3"}
+ addUserKnob {12 pin4 l "pin 4"}
+ addUserKnob {78 pinTimeOffset l "corner pin time offset" t "shift your tracking data if it does not start at the first frame" n 1}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {41 filter T CornerPin2D1.filter}
+ addUserKnob {41 clamp -STARTLINE T CornerPin2D1.clamp}
+}
+ Input {
+  inputs 0
+  name Src
+  label "\[value number]"
+  xpos 0
+ }
+set N1756aaf0 [stack 0]
+ Dot {
+  name Dot2
+  xpos -63
+  ypos 8
+ }
+ Dot {
+  name Dot3
+  xpos -63
+  ypos 266
+ }
+push $N1756aaf0
+ Input {
+  inputs 0
+  name UndistMap
+  label "\[value number]"
+  xpos 238
+  ypos -4
+  number 1
+ }
+ Crop {
+  box {{"\[python -execlocal bgNode\\ =\\ nuke.toNode(\\\"Src\\\")\\ndistortionMapNode\\ =\\ nuke.toNode(\\\"UndistMap\\\")\\ncurrentWidth\\ =\\ distortionMapNode.format().width()\\ntargetWidth\\ =\\ bgNode.format().width()\\nret\\ =\\ currentWidth/2\\ -\\ targetWidth/2\\n]"} {"\[python -execlocal bgNode\\ =\\ nuke.toNode(\\\"Src\\\")\\ndistortionMapNode\\ =\\ nuke.toNode(\\\"UndistMap\\\")\\ncurrentHeight\\ =\\ distortionMapNode.format().height()\\ntargetHeight\\ =\\ bgNode.format().height()\\nret\\ =\\ currentHeight/2\\ -\\ targetHeight/2]"} {"\[python -execlocal bgNode\\ =\\ nuke.toNode(\\\"Src\\\")\\ndistortionMapNode\\ =\\ nuke.toNode(\\\"UndistMap\\\")\\ncurrentWidth\\ =\\ distortionMapNode.format().width()\\ntargetWidth\\ =\\ bgNode.format().width()\\nret\\ =\\ currentWidth/2\\ +\\ targetWidth/2]"} {"\[python -execlocal bgNode\\ =\\ nuke.toNode(\\\"Src\\\")\\ndistortionMapNode\\ =\\ nuke.toNode(\\\"UndistMap\\\")\\ncurrentHeight\\ =\\ distortionMapNode.format().height()\\ntargetHeight\\ =\\ bgNode.format().height()\\nret\\ =\\ currentHeight/2\\ +\\ targetHeight/2]"}}
+  reformat true
+  crop false
+  name Crop2
+  selected true
+  xpos 238
+  ypos 88
+ }
+push $N1756aaf0
+ Dot {
+  name Dot1
+  xpos 162
+  ypos 8
+ }
+ STMap {
+  inputs 2
+  uv rgb
+  name undistortion
+  xpos 128
+  ypos 151
+ }
+ Switch {
+  inputs 2
+  which {{"!\[exists parent.input1]"}}
+  name Switch1
+  xpos 0
+  ypos 156
+ }
+ CornerPin2D {
+  to1 {{parent.pin1.x(t+parent.pinTimeOffset)} {parent.pin1.y(t+parent.pinTimeOffset)}}
+  to2 {{parent.pin2.x(t+parent.pinTimeOffset)} {parent.pin2.y(t+parent.pinTimeOffset)}}
+  to3 {{parent.pin3.x(t+parent.pinTimeOffset)} {parent.pin3.y(t+parent.pinTimeOffset)}}
+  to4 {{parent.pin4.x(t+parent.pinTimeOffset)} {parent.pin4.y(t+parent.pinTimeOffset)}}
+  invert true
+  from1 {0 0}
+  from2 {{"\[python nuke.toNode(\\\"Src\\\").width()\\ ]"} 0}
+  from3 {{"\[python nuke.toNode(\\\"Src\\\").width()\\ ]"} {"\[python nuke.toNode(\\\"Src\\\").height()\\ ]"}}
+  from4 {0 {"\[python nuke.toNode(\\\"Src\\\").height()\\ ]"}}
+  name CornerPin2D1
+  xpos 0
+  ypos 212
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos 0
+  ypos 263
+ }
+set N67de7a0 [stack 0]
+ Output {
+  name Output1
+  xpos 0
+  ypos 300
+ }
+push $N67de7a0
+push $N67de7a0
+ Viewer {
+  inputs 2
+  input_number 1
+  input_process false
+  name Viewer1
+  xpos -294
+  ypos 200
+ }
+end_group
