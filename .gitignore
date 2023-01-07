@@ -1,3 +1,3 @@
 .idea/
-__pycache__/
-icons/tab_stats.dat
+src/__pycache__/
+src/icons/tab_stats.dat

@@ -1,3 +1,3 @@
-# Nuke automatically executes init.py if it finds one
-# ! Do not delete this import
-import mochaimport
+# nuke init.py example file
+# place in ~/.nuke folder or modify existing init.py to include mochaimport folder
+nuke.pluginAddPath('./mochaimport')
