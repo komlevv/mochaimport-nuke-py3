@@ -7,13 +7,14 @@
 
 
 try:
-    from PySide import QtGui
+    from PySide6 import QtWidgets
+except ImportError:
+    try:
+        from PySide2 import QtWidgets
+    except ImportError:
+        from PySide import QtGui as QtWidgets
 
-    myQtModule = QtGui
-except:
-    from PySide2 import QtWidgets
-
-    myQtModule = QtWidgets
+myQtModule = QtWidgets
 
 
 def acceptEulaDialog():

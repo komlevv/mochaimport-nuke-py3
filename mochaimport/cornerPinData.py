@@ -2,13 +2,14 @@ import re
 import pprint
 
 try:
-    from PySide import QtGui
+    from PySide6.QtWidgets import QApplication
+except ImportError:
+    try:
+        from PySide2.QtWidgets import QApplication
+    except ImportError:
+        from PySide import QtGui
 
-    clipboardModule = QtGui
-except:
-    from PySide2 import QtWidgets
-
-    clipboardModule = QtWidgets
+        QApplication = QtGui.QApplication
 
 
 class CornerPinData(object):
@@ -123,5 +124,5 @@ class CornerPinDataFromNukeCornerPinFile(CornerPinDataFromNukeCornerPinText):
 # Corner pin data parsed from the clipboard (must be in *.nk format)
 class CornerPinDataFromClipboard(CornerPinDataFromNukeCornerPinText):
     def __init__(self):
-        trackingData = clipboardModule.QApplication.clipboard().text()
+        trackingData = QApplication.clipboard().text()
         super(CornerPinDataFromClipboard, self).__init__(trackingData)
